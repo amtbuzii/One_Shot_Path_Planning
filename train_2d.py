@@ -26,7 +26,7 @@ else:
 
 
 EPOCHS = 20
-PATH = '/home/amitbou/PycharmProjects/nativ/data_2/maze_30x30_rnd/'
+PATH = '/data_from_paper/maze_30x30_rnd/'
 HIDDEN_LAYERS = 31
 TRAIN_RATIO = 0.8
 N = 30

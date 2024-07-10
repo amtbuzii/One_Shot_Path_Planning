@@ -5,10 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 # Load data and model
-#PATH = '/home/amitbou/PycharmProjects/nativ/inbal/30X30/'
-#PATH = '/home/amitbou/PycharmProjects/nativ/data_2/maze_30x30_rnd/'
-PATH = '/home/amitbou/PycharmProjects/nativ/data_2/30x30_combo/'
-
+PATH = '/data_from_paper/maze_30x30_rnd/'
 
 N = 30
 
