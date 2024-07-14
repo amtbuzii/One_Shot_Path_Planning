@@ -11,10 +11,10 @@ import os
 # Set TF_ENABLE_ONEDNN_OPTS environment variable to 0 to disable oneDNN custom operations
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
-input_path = '/home/amitbou/PycharmProjects/nativ/data_2/maze_10x10_rnd/'
-# input_path = '../data_2/maze_15x15_rnd/'
-# input_path = '../data_2/maze_20x20_rnd/'
-# input_path = '../data_2/maze_30x30_rnd/'
+input_path = '/home/amitbou/PycharmProjects/nativ/data_from_paper/maze_10x10_rnd/'
+# input_path = '../data_from_paper/maze_15x15_rnd/'
+# input_path = '../data_from_paper/maze_20x20_rnd/'
+# input_path = '../data_from_paper/maze_30x30_rnd/'
 
 print('Load data ...')
 x = np.loadtxt(input_path + 'inputs.dat')

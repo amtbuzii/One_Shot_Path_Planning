@@ -7,10 +7,10 @@ import matplotlib.pyplot as plt
 import time
 import math
 
-input_path = '/home/amitbou/PycharmProjects/nativ/data_2/maze_30x30_rnd_inbal/'
-# input_path = '../data_2/maze_15x15_rnd/'
-# input_path = '../data_2/maze_20x20_rnd/'
-# input_path = '../data_2/maze_30x30_rnd/'
+input_path = '/home/amitbou/PycharmProjects/nativ/data_from_paper/maze_30x30_rnd_inbal/'
+# input_path = '../data_from_paper/maze_15x15_rnd/'
+# input_path = '../data_from_paper/maze_20x20_rnd/'
+# input_path = '../data_from_paper/maze_30x30_rnd/'
 
 model_file = '/home/amitbou/PycharmProjects/nativ/model_2d.keras'
 # model_file = '../results_2/model_15_conv.hf5'

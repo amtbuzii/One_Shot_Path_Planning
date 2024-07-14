@@ -25,9 +25,9 @@ else:
     print("No GPUs available")
 
 
-EPOCHS = 20
-PATH = '/home/amitbou/PycharmProjects/nativ/combo/'
-HIDDEN_LAYERS = 31
+EPOCHS = 100
+PATH = 'combo/'
+HIDDEN_LAYERS = 50
 TRAIN_RATIO = 0.7
 N = 30
 
@@ -257,10 +257,3 @@ if __name__ == "__main__":
     print('Test loss:', loss)
     print('Test accuracy:', accuracy)
 
-    user_choice = 1
-
-
-    while user_choice > 0: # Visualize a test sample
-        row_number = int(input("Please select an number (0 to exit)"))
-        prediction = model.predict(x_test[row_number].reshape(1, N, N, 3))
-        plot_row(x_test[row_number], y_test[row_number], prediction[0, :, :, 0])
