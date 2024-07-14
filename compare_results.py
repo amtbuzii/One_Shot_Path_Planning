@@ -1,16 +1,16 @@
 import tensorflow as tf
 from keras.models import load_model
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 import os
 # Load data and model
 from collections import deque
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 #PATH = '/home/amitbou/PycharmProjects/nativ/inbal/30X30/'
 #PATH = '/home/amitbou/PycharmProjects/nativ/data_2/maze_30x30_rnd/'
-PATH = '/home/amitbou/PycharmProjects/nativ/combo/'
-
+PATH = 'combo/'
 
 N = 30
 
@@ -126,10 +126,6 @@ def plot_row_th(example_num, row, actual_output, predicted_output=None):
     return path_exists, actual_length
 
 
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 
 # Function to count paths found and not found
@@ -228,7 +224,7 @@ def main(result, N_tries):
 
 
 THRESHOLDS = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-N_tries = 20
+N_tries = 3000
 PLOT=False
 result = np.zeros([N_tries,2])
 threshold_results = np.zeros([len(THRESHOLDS), 4])
