@@ -5,7 +5,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 # Load data and model
-PATH = '/data_from_paper/maze_30x30_rnd/'
+PATH = '/home/amitbou/One_Shot_Path_Planning/data_from_inbal/30X30/'
+#PATH = '/home/amitbou/PycharmProjects/nativ/data_2/maze_30x30_rnd/'
+#PATH = '/home/amitbou/PycharmProjects/nativ/combo/'
+
 
 N = 30
 
@@ -218,7 +221,7 @@ def plot_row_1(row, actual_output, predicted_output=None):
     #if row_number == 0:
     #    break
 
-for _ in range(3040, 3050):
+for _ in range(4418, 4419):
     row_number = int(_)
 
     prediction = model.predict(x3d[row_number].reshape(1, N, N, 3))

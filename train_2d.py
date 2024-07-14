@@ -26,9 +26,9 @@ else:
 
 
 EPOCHS = 20
-PATH = '/data_from_paper/maze_30x30_rnd/'
+PATH = '/home/amitbou/PycharmProjects/nativ/combo/'
 HIDDEN_LAYERS = 31
-TRAIN_RATIO = 0.8
+TRAIN_RATIO = 0.7
 N = 30
 
 def load_data(input_path: str) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
