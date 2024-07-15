@@ -8,9 +8,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-#PATH = '/home/amitbou/PycharmProjects/nativ/inbal/30X30/'
-#PATH = '/home/amitbou/PycharmProjects/nativ/data_2/maze_30x30_rnd/'
-PATH = 'combo/'
+PATH = 'data_from_inbal/30X30/'
 
 N = 30
 
@@ -230,7 +228,7 @@ result = np.zeros([N_tries,2])
 threshold_results = np.zeros([len(THRESHOLDS), 4])
 for idx, t in enumerate(THRESHOLDS):
     THRESHOLD = t
-    for i in range(N_tries):
+    for i in range(1, N_tries):
         prediction = model.predict(x3d[i].reshape(1, N, N, 3))
         result[i] = plot_row_th(example_num=i, row=x3d[i], actual_output=y[i], predicted_output=prediction[0, :, :, 0]) #  return path_exists, actual_length
     threshold_results[idx] = main(result, N_tries)
@@ -275,3 +273,5 @@ plt.legend()
 # Show the plot
 plt.grid(True)
 plt.show()
+
+tf.keras.backend.clear_session()

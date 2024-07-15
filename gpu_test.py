@@ -10,3 +10,5 @@ if gpus:
         print(e)
 else:
     print("No GPUs available")
+
+tf.keras.backend.clear_session()
