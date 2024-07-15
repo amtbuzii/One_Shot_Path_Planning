@@ -116,7 +116,7 @@ def train_model(model: Model, x_train: np.ndarray, y_train: np.ndarray) -> keras
     early_stop = EarlyStopping(monitor='val_accuracy', mode='max', min_delta=0, patience=10, verbose=1)
     save_weights = ModelCheckpoint(filepath='weights_2d.keras', monitor='val_accuracy', verbose=1, save_best_only=True)
 
-    history = model.fit(x_train, y_train, batch_size=32, validation_split=1/14, epochs=EPOCHS, verbose=1, callbacks=[early_stop, save_weights])
+    history = model.fit(x_train, y_train, batch_size=64, validation_split=1/14, epochs=EPOCHS, verbose=1, callbacks=[early_stop, save_weights])
     return history
 
 

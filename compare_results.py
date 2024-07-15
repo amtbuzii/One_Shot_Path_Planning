@@ -224,7 +224,7 @@ def main(result, N_tries):
 
 
 THRESHOLDS = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-N_tries = 3000
+N_tries = 2000
 PLOT=False
 result = np.zeros([N_tries,2])
 threshold_results = np.zeros([len(THRESHOLDS), 4])
