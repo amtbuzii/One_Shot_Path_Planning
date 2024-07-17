@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 # Load data and model
-PATH = 'combo/'
+PATH = 'data_from_inbal/16.7.24/10000/'
 
 N = 30
 
