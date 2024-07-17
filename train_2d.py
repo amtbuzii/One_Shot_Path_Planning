@@ -25,9 +25,9 @@ else:
     print("No GPUs available")
 
 
-EPOCHS = 100
+EPOCHS = 20
 PATH = 'combo/'
-HIDDEN_LAYERS = 50
+HIDDEN_LAYERS = 31
 TRAIN_RATIO = 0.7
 N = 30
 
