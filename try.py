@@ -5,10 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 # Load data and model
-PATH = 'data_from_inbal/30X30/'
-#PATH = '/home/amitbou/PycharmProjects/nativ/data_from_paper/maze_30x30_rnd/'
-#PATH = '/home/amitbou/PycharmProjects/nativ/combo/'
-
+PATH = 'combo/'
 
 N = 30
 
@@ -226,3 +223,5 @@ for _ in range(4418, 4430):
 
     prediction = model.predict(x3d[row_number].reshape(1, N, N, 3))
     plot_row(row_number, x3d[row_number], y[row_number], prediction[0, :, :, 0])
+
+tf.keras.backend.clear_session()

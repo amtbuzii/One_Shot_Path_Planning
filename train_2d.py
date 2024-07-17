@@ -25,8 +25,8 @@ else:
     print("No GPUs available")
 
 
-EPOCHS = 20
-PATH = 'combo/'
+EPOCHS = 50
+PATH = 'data_from_inbal/30X30'
 HIDDEN_LAYERS = 31
 TRAIN_RATIO = 0.7
 N = 30
@@ -249,11 +249,15 @@ if __name__ == "__main__":
     history = train_model(model, x_train, y_train)
 
     print('Save trained model ...')
-    save_model(model, "model_2d.keras")
+    import datetime
+    now = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    save_model(model, "model_2d.keras"+now)
 
     print('Test network ...')
     model = load_model("model_2d.keras")
     loss, accuracy = evaluate_model(model, x_test, y_test)
     print('Test loss:', loss)
     print('Test accuracy:', accuracy)
+
+    tf.keras.backend.clear_session()
 
