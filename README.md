@@ -86,6 +86,7 @@ Overview
 - For each threshold, it predicts paths for a number of trials, stores the results, and computes analysis metrics using the functions above.
 - Results are stored in a DataFrame  and visualized using matplotlib to show how different thresholds affect path prediction accuracy.
 
+![img](img/thresh.png)
 
 ## Research Conclusions:
 
