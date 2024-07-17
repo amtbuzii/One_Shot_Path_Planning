@@ -8,7 +8,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-PATH = 'data_from_inbal/30X30/'
+PATH = 'data_from_inbal/16.7.24/10000/'
 
 N = 30
 
@@ -221,7 +221,7 @@ def main(result, N_tries):
     return print_summary_statistics(count_not_found, count_found, count_equal, count_longer, N_tries)
 
 
-THRESHOLDS = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+THRESHOLDS = [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 N_tries = 2000
 PLOT=False
 result = np.zeros([N_tries,2])
@@ -235,6 +235,8 @@ for idx, t in enumerate(THRESHOLDS):
 
 threshold_results_df = pd.DataFrame(threshold_results, columns=["paths_found", "paths_not_found", "paths_are_equal", "paths_are_longer"])
 threshold_results_df.index = THRESHOLDS
+
+threshold_results_df.to_csv('threshold_results.csv')
 
 # Plotting paths_found and paths_not_found
 plt.figure(figsize=(12, 6))
