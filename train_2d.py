@@ -114,7 +114,7 @@ def train_model(model: Model, x_train: np.ndarray, y_train: np.ndarray) -> keras
     History object containing training metrics.
     """
     early_stop = EarlyStopping(monitor='val_accuracy', mode='max', min_delta=0, patience=10, verbose=1)
-    save_weights = ModelCheckpoint(filepath='weights_2d.keras', monitor='val_accuracy', verbose=1, save_best_only=True)
+    save_weights = ModelCheckpoint(filepath='trained_model/30*30/weights_2d.keras', monitor='val_accuracy', verbose=1, save_best_only=True)
 
     history = model.fit(x_train, y_train, batch_size=32, validation_split=1/14, epochs=EPOCHS, verbose=1, callbacks=[early_stop, save_weights])
     return history
@@ -254,7 +254,7 @@ if __name__ == "__main__":
     save_model(model, "model_2d.keras"+now)
 
     print('Test network ...')
-    model = load_model("model_2d.keras")
+    model = load_model("trained_model/30*30/model_2d.keras")
     loss, accuracy = evaluate_model(model, x_test, y_test)
     print('Test loss:', loss)
     print('Test accuracy:', accuracy)

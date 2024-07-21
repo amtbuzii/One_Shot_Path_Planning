@@ -31,7 +31,7 @@ def preprocess_data(x, s_map, g_map, y):
 
 x, s_map, g_map, y = load_data(PATH)
 x3d, y = preprocess_data(x, s_map, g_map, y)
-model = load_model("weights_2d.keras")
+model = load_model("trained_model/30*30/weights_2d.keras")
 
 
 
