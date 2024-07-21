@@ -1,5 +1,8 @@
 ## One-Shot Multi-Path Planning Using Fully Convolutional Networks
 
+download 100*100
+[link](https://jumbomail.me/j/0ayqKkRCJUCjl75)
+
 - This repository contains the implementation and codebase inspired by the research article "One-Shot Multi-Path Planning Using Fully Convolutional Networks in a Comparison to Other Algorithms" published in Frontiers in Neurorobotics.
 Overview
 
