@@ -116,14 +116,13 @@ def plot_row_th(example_num, row, actual_output, predicted_output=None):
 
             plt.tight_layout()
             plt.show()
+
     if predicted_output is not None:
         path_exists = is_path_present(row[:, :, 1], row[:, :, 2], predicted_output)
         actual_length = int(np.sum(actual_output))
         print("Predicted path length:", path_exists, "Actual path length:", actual_length)
 
     return path_exists, actual_length
-
-
 
 
 # Function to count paths found and not found

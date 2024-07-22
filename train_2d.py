@@ -26,10 +26,10 @@ else:
 
 
 EPOCHS = 50
-PATH = 'data_from_inbal/30X30'
-HIDDEN_LAYERS = 31
+PATH = 'data_from_inbal/100X100/'
+HIDDEN_LAYERS = 100
 TRAIN_RATIO = 0.7
-N = 30
+N = 100
 
 def load_data(input_path: str) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """
@@ -114,7 +114,7 @@ def train_model(model: Model, x_train: np.ndarray, y_train: np.ndarray) -> keras
     History object containing training metrics.
     """
     early_stop = EarlyStopping(monitor='val_accuracy', mode='max', min_delta=0, patience=10, verbose=1)
-    save_weights = ModelCheckpoint(filepath='trained_model/30*30/weights_2d.keras', monitor='val_accuracy', verbose=1, save_best_only=True)
+    save_weights = ModelCheckpoint(filepath='trained_model/100*100/weights_2d.keras', monitor='val_accuracy', verbose=1, save_best_only=True)
 
     history = model.fit(x_train, y_train, batch_size=32, validation_split=1/14, epochs=EPOCHS, verbose=1, callbacks=[early_stop, save_weights])
     return history
@@ -249,12 +249,11 @@ if __name__ == "__main__":
     history = train_model(model, x_train, y_train)
 
     print('Save trained model ...')
-    import datetime
-    now = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-    save_model(model, "model_2d.keras"+now)
+
+    save_model(model, "trained_model/100*100/model_2d.keras")
 
     print('Test network ...')
-    model = load_model("trained_model/30*30/model_2d.keras")
+    model = load_model("trained_model/100*100/model_2d.keras")
     loss, accuracy = evaluate_model(model, x_test, y_test)
     print('Test loss:', loss)
     print('Test accuracy:', accuracy)
