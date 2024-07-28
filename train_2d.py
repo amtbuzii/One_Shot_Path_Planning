@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, List
 import keras
 import os
 import tensorflow as tf
@@ -30,6 +30,49 @@ PATH = 'data_from_inbal/100X100/'
 HIDDEN_LAYERS = 100
 TRAIN_RATIO = 0.7
 N = 100
+directories_path = ['data_from_inbal/100X100_C/100x100_10000',
+                    'data_from_inbal/100X100_C/100x100_20000',
+                    'data_from_inbal/100X100_C/100x100_30000',
+                    'data_from_inbal/100X100_C/100x100_40000',
+                    'data_from_inbal/100X100_C/100x100_50000']
+
+def load_data_from_directories(directories: List[str]) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """
+    Load input data, start maps, goal maps, and outputs from multiple directories.
+
+    Args:
+    directories: List of paths to directories containing data files.
+
+    Returns:
+    Four concatenated NumPy arrays containing input data, start maps, goal maps, and outputs.
+    """
+    all_x, all_s_map, all_g_map, all_y = [], [], [], []
+
+    for dir_path in directories:
+        try:
+            x = np.loadtxt(os.path.join(dir_path, 'inputs.dat'))
+            s_map = np.loadtxt(os.path.join(dir_path, 's_maps.dat'))
+            g_map = np.loadtxt(os.path.join(dir_path, 'g_maps.dat'))
+            y = np.loadtxt(os.path.join(dir_path, 'outputs.dat'))
+
+            all_x.append(x)
+            all_s_map.append(s_map)
+            all_g_map.append(g_map)
+            all_y.append(y)
+
+        except FileNotFoundError as e:
+            print(f"File not found in directory {dir_path}: {e}")
+        except Exception as e:
+            print(f"An error occurred in directory {dir_path}: {e}")
+
+    # Concatenate all data into single arrays
+    x_combined = np.concatenate(all_x, axis=0)
+    s_map_combined = np.concatenate(all_s_map, axis=0)
+    g_map_combined = np.concatenate(all_g_map, axis=0)
+    y_combined = np.concatenate(all_y, axis=0)
+
+    return x_combined, s_map_combined, g_map_combined, y_combined
+
 
 def load_data(input_path: str) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """
@@ -235,10 +278,10 @@ def plot_row(row, actual_output, predicted_output=None):
 
 
 if __name__ == "__main__":
-    input_path = PATH
+    input_path = directories_path
 
     print('Load data ...')
-    x, s_map, g_map, y = load_data(input_path)
+    x, s_map, g_map, y = load_data_from_directories(input_path)
     x3d, y = preprocess_data(x, s_map, g_map, y)
 
     x_train, y_train, x_test, y_test = split_data(x3d, y, train_ratio=TRAIN_RATIO)
