@@ -116,15 +116,16 @@ def generate_single_environment(args):
     return s_maps, g_maps, inputs, output
 
 
-def write_dat_files(s_maps_list, g_maps_list, inputs_list, output_list, grid_size):
-    print("Writing to DAT files...")
-
-    flat_size = grid_size * grid_size
+def write_chunk_to_files(chunk_data, chunk_index, grid_size):
+    """Write a chunk of environment data to .dat files."""
+    s_maps_list, g_maps_list, inputs_list, output_list = chunk_data
 
     def write_dat_file(filename, data):
         with open(filename, 'w') as file:
             for row in data:
                 file.write(' '.join(map(str, row)) + '\n')
+
+    flat_size = grid_size * grid_size
 
     s_maps_array = np.array(s_maps_list)
     g_maps_array = np.array(g_maps_list)
@@ -136,54 +137,72 @@ def write_dat_files(s_maps_list, g_maps_list, inputs_list, output_list, grid_siz
     inputs_flat = inputs_array.reshape(-1, flat_size)
     output_flat = output_array.reshape(-1, flat_size)
 
-    write_dat_file("generated_environments/s_maps.dat", s_maps_flat)
-    write_dat_file("generated_environments/g_maps.dat", g_maps_flat)
-    write_dat_file("generated_environments/inputs.dat", inputs_flat)
-    write_dat_file("generated_environments/outputs.dat", output_flat)
+    output_dir = f"generated_environments_chunk_{chunk_index}"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
 
-    print("DAT file writing complete.")
+    write_dat_file(os.path.join(output_dir, "s_maps.dat"), s_maps_flat)
+    write_dat_file(os.path.join(output_dir, "g_maps.dat"), g_maps_flat)
+    write_dat_file(os.path.join(output_dir, "inputs.dat"), inputs_flat)
+    write_dat_file(os.path.join(output_dir, "output.dat"), output_flat)
 
 
-def generate_environments(num_envs, grid_size, num_obstacles, obstacle_size, num_start_goal_pairs, min_distance):
+def generate_environments(num_envs, grid_size, num_obstacles, obstacle_size, num_start_goal_pairs, min_distance,
+                          chunk_size):
     print("Starting environment generation...")
 
-    s_maps_list = []
-    g_maps_list = []
-    inputs_list = []
-    output_list = []
+    num_chunks = num_envs // chunk_size
+    if num_envs % chunk_size > 0:
+        num_chunks += 1
 
-    with ProcessPoolExecutor() as executor:
-        futures = [executor.submit(generate_single_environment, (
-        num_envs, grid_size, num_obstacles, obstacle_size, num_start_goal_pairs, min_distance, i)) for i in
-                   range(num_envs)]
+    for chunk_index in range(num_chunks):
+        print(f"Generating chunk {chunk_index + 1}/{num_chunks}...")
 
-        for i, future in enumerate(as_completed(futures), 1):
-            try:
-                s_maps, g_maps, inputs, output = future.result()
-                s_maps_list.append(s_maps)
-                g_maps_list.append(g_maps)
-                inputs_list.append(inputs)
-                output_list.append(output)
+        s_maps_list = []
+        g_maps_list = []
+        inputs_list = []
+        output_list = []
 
-                if i % 100 == 0:
-                    print(f"Processed {i}/{num_envs} environments...")
+        start_index = chunk_index * chunk_size
+        end_index = min(start_index + chunk_size, num_envs)
 
-            except Exception as e:
-                print(f"Error processing environment {i}: {e}")
+        with ProcessPoolExecutor() as executor:
+            futures = [executor.submit(generate_single_environment, (
+            num_envs, grid_size, num_obstacles, obstacle_size, num_start_goal_pairs, min_distance, i)) for i in
+                       range(start_index, end_index)]
 
-    write_dat_files(s_maps_list, g_maps_list, inputs_list, output_list, grid_size)
+            for i, future in enumerate(as_completed(futures), start_index):
+                try:
+                    s_maps, g_maps, inputs, output = future.result()
+                    s_maps_list.append(s_maps)
+                    g_maps_list.append(g_maps)
+                    inputs_list.append(inputs)
+                    output_list.append(output)
+
+                    if (i + 1) % 1000 == 0:
+                        print(
+                            f"Processed {i + 1 - start_index}/{chunk_size} environments in chunk {chunk_index + 1}...")
+
+                except Exception as e:
+                    print(f"Error processing environment {i}: {e}")
+
+        write_chunk_to_files((s_maps_list, g_maps_list, inputs_list, output_list), chunk_index + 1, grid_size)
 
     print("Environment generation complete.")
+
+
 def main():
-    num_envs = 200  # Number of environments to generate
+    num_envs = 100  # Total number of environments to generate
     grid_size = 100
     num_obstacles = 12
     obstacle_size = 25
     num_start_goal_pairs = 1
     min_distance = 20
+    chunk_size = 50  # Number of environments per file
 
     set_random_seed(42)  # Set a fixed seed for reproducibility
-    generate_environments(num_envs, grid_size, num_obstacles, obstacle_size, num_start_goal_pairs, min_distance)
+    generate_environments(num_envs, grid_size, num_obstacles, obstacle_size, num_start_goal_pairs, min_distance,
+                          chunk_size)
 
 
 if __name__ == "__main__":
