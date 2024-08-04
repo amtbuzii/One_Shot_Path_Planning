@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 # Load data and model
-PATH = 'data_from_inbal/100X100/'
+PATH = 'data_from_inbal/100X100/10000/'
 
 N = 100
 
@@ -86,7 +86,7 @@ def plot_row(example_num, row, actual_output, predicted_output=None):
     plt.show()
 
 
-for _ in range(4418, 4430):
+for _ in range(5500, 5510):
     row_number = int(_)
 
     prediction = model.predict(x3d[row_number].reshape(1, N, N, 3))
