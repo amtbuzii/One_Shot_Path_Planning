@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 # Load data and model
-PATH = '/home/amitbou/One_Shot_Path_Planning/database/generated_environments/'
+PATH = '/database/generated_environments_chunk_3/'
 
 N = 100
 
@@ -86,7 +86,7 @@ def plot_row(example_num, row, actual_output, predicted_output=None):
     plt.show()
 
 
-for _ in range(0, 5):
+for _ in range(20, 23):
     row_number = int(_)
 
     prediction = model.predict(x3d[row_number].reshape(1, N, N, 3))

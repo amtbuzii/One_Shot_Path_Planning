@@ -137,14 +137,14 @@ def write_chunk_to_files(chunk_data, chunk_index, grid_size):
     inputs_flat = inputs_array.reshape(-1, flat_size)
     output_flat = output_array.reshape(-1, flat_size)
 
-    output_dir = f"generated_environments_chunk_{chunk_index}"
+    output_dir = f"generated_environments_chunk_{30+chunk_index}"
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
     write_dat_file(os.path.join(output_dir, "s_maps.dat"), s_maps_flat)
     write_dat_file(os.path.join(output_dir, "g_maps.dat"), g_maps_flat)
     write_dat_file(os.path.join(output_dir, "inputs.dat"), inputs_flat)
-    write_dat_file(os.path.join(output_dir, "output.dat"), output_flat)
+    write_dat_file(os.path.join(output_dir, "outputs.dat"), output_flat)
 
 
 def generate_environments(num_envs, grid_size, num_obstacles, obstacle_size, num_start_goal_pairs, min_distance,
