@@ -1,13 +1,12 @@
 from typing import Tuple
-import keras
 import os
+import numpy as np
+import keras
 import tensorflow as tf
 from keras.layers import Input, Conv2D, Dropout, BatchNormalization
 from keras.models import Model, load_model
-from keras.callbacks import EarlyStopping, ModelCheckpoint
-import numpy as np
+from keras.callbacks import EarlyStopping, ModelCheckpoint, Callback
 from sklearn.model_selection import train_test_split
-
 
 # Set up TensorFlow GPU configuration at the start
 gpus = tf.config.list_physical_devices('GPU')
@@ -94,9 +93,17 @@ def build_model(input_shape: Tuple[int, int, int]) -> Model:
     net = Conv2D(filters=1, kernel_size=[3, 3], strides=[1, 1], padding="same", kernel_initializer='orthogonal', activation='sigmoid')(net)
 
     model = Model(inputs=x, outputs=net)
-    model.compile(optimizer='adam', loss='mse', metrics=['accuracy'])
+    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
     return model
+
+class SaveModelCallback(Callback):
+    def __init__(self, filepath):
+        super(SaveModelCallback, self).__init__()
+        self.filepath = filepath
+
+    def on_batch_end(self, batch, logs=None):
+        self.model.save(self.filepath)
 
 def train_model_on_batch(model: Model, x_train: np.ndarray, y_train: np.ndarray, x_val: np.ndarray, y_val: np.ndarray) -> keras.callbacks.History:
     """
@@ -104,20 +111,22 @@ def train_model_on_batch(model: Model, x_train: np.ndarray, y_train: np.ndarray,
 
     Args:
     model: Compiled neural network model.
-    x_batch: Batch input data.
-    y_batch: Batch output data.
+    x_train: Training input data.
+    y_train: Training output data.
+    x_val: Validation input data.
+    y_val: Validation output data.
 
     Returns:
     History object containing training metrics.
     """
     callbacks = [
         EarlyStopping(monitor='val_loss', patience=5),
-        ModelCheckpoint(filepath='best_model.keras', monitor='val_loss', save_best_only=True)
+        ModelCheckpoint(filepath='trained_model/mini_batch/best_model.keras', monitor='val_loss', save_best_only=True),
+        SaveModelCallback(filepath='trained_model/mini_batch/latest_model.keras')
     ]
 
     history = model.fit(x_train, y_train, batch_size=32, epochs=EPOCHS, validation_data=(x_val, y_val), callbacks=callbacks, verbose=1)
     return history
-
 
 def save_model(model: Model, filename: str) -> None:
     """
@@ -130,41 +139,42 @@ def save_model(model: Model, filename: str) -> None:
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     model.save(filename)
 
-
 if __name__ == "__main__":
     print('Build model ...')
     model = build_model(input_shape=(N, N, 3))
     model.summary()
 
-    print('Load and preprocess data ...')
-    x_list, s_map_list, g_map_list, y_list = [], [], [], []
+    print('Train network ...')
     for directory in directories_path:
+        print(f'Loading data from {directory} ...')
         x, s_map, g_map, y = load_data_batch(directory)
-        x_list.append(x)
-        s_map_list.append(s_map)
-        g_map_list.append(g_map)
-        y_list.append(y)
+        x3d, y = preprocess_data(x, s_map, g_map, y)
 
-    x = np.concatenate(x_list, axis=0)
-    s_map = np.concatenate(s_map_list, axis=0)
-    g_map = np.concatenate(g_map_list, axis=0)
-    y = np.concatenate(y_list, axis=0)
+        print('Split data into training and testing sets ...')
+        x_train, x_test, y_train, y_test = train_test_split(x3d, y, test_size=1-TRAIN_RATIO, random_state=42)
 
-    x3d, y = preprocess_data(x, s_map, g_map, y)
+        print('Train model on current batch ...')
+        train_model_on_batch(model, x_train, y_train, x_test, y_test)
 
-    print('Split data into training and testing sets ...')
-    x_train, x_test, y_train, y_test = train_test_split(x3d, y, test_size=1-TRAIN_RATIO, random_state=42)
+        print('Save model after current batch ...')
+        save_model(model, "trained_model/mini_batch/model_2d.keras")
 
-    print('Train model ...')
-    train_model_on_batch(model, x_train, y_train, x_test, y_test)
+        print('Load the latest model ...')
+        model = load_model("trained_model/mini_batch/model_2d.keras")
 
-    print('Save trained model ...')
-    save_model(model, "trained_model/100*100/model_2d.keras")
+        print('Evaluate model on test set for current batch ...')
+        loss, accuracy = model.evaluate(x_test, y_test, verbose=1)
+        print(f'Test loss for current batch: {loss}')
+        print(f'Test accuracy for current batch: {accuracy}')
+        tf.keras.backend.clear_session()
 
-    print('Load best model and evaluate ...')
-    best_model = load_model('best_model.keras')
-    loss, accuracy = best_model.evaluate(x_test, y_test, verbose=1)
+    print('Test network on the last chunk ...')
+    x_test, s_map_test, g_map_test, y_test = load_data_batch(directories_path[-1])
+    x3d_test, y_test = preprocess_data(x_test, s_map_test, g_map_test, y_test)
+    model = load_model("trained_model/100*100/model_2d.keras")
+    loss, accuracy = model.evaluate(x3d_test, y_test, verbose=1)
     print('Test loss:', loss)
     print('Test accuracy:', accuracy)
 
     tf.keras.backend.clear_session()
+
