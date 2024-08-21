@@ -23,12 +23,12 @@ if gpus:
 else:
     print("No GPUs available")
 
-EPOCHS = 50
-HIDDEN_LAYERS = 5
-TRAIN_RATIO = 0.7
+EPOCHS = 40
+HIDDEN_LAYERS = 120
+TRAIN_RATIO = 0.8
 N = 100
 
-directories_path = [f'database/generated_environments_chunk_{i}' for i in range(1, 5)]
+directories_path = [f'database/generated_environments_chunk_{i}' for i in range(1, 101)]
 
 def load_data_batch(directory: str) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """
@@ -121,11 +121,11 @@ def train_model_on_batch(model: Model, x_train: np.ndarray, y_train: np.ndarray,
     """
     callbacks = [
         EarlyStopping(monitor='val_loss', patience=5),
-        ModelCheckpoint(filepath='trained_model/mini_batch/best_model.keras', monitor='val_loss', save_best_only=True),
-        SaveModelCallback(filepath='trained_model/mini_batch/latest_model.keras')
+        ModelCheckpoint(filepath='trained_model/100*100_mini_batch/best_model.keras', monitor='val_loss', save_best_only=True),
+        SaveModelCallback(filepath='trained_model/100*100_mini_batch/latest_model.keras')
     ]
 
-    history = model.fit(x_train, y_train, batch_size=32, epochs=EPOCHS, validation_data=(x_val, y_val), callbacks=callbacks, verbose=1)
+    history = model.fit(x_train, y_train, batch_size=32, epochs=EPOCHS, validation_data=(x_val, y_val), verbose=1)
     return history
 
 def save_model(model: Model, filename: str) -> None:
@@ -157,10 +157,10 @@ if __name__ == "__main__":
         train_model_on_batch(model, x_train, y_train, x_test, y_test)
 
         print('Save model after current batch ...')
-        save_model(model, "trained_model/mini_batch/model_2d.keras")
+        save_model(model, "trained_model/100*100_mini_batch/model_2d.keras")
 
         print('Load the latest model ...')
-        model = load_model("trained_model/mini_batch/model_2d.keras")
+        model = load_model("trained_model/100*100_mini_batch/model_2d.keras")
 
         print('Evaluate model on test set for current batch ...')
         loss, accuracy = model.evaluate(x_test, y_test, verbose=1)
@@ -171,7 +171,7 @@ if __name__ == "__main__":
     print('Test network on the last chunk ...')
     x_test, s_map_test, g_map_test, y_test = load_data_batch(directories_path[-1])
     x3d_test, y_test = preprocess_data(x_test, s_map_test, g_map_test, y_test)
-    model = load_model("trained_model/100*100/model_2d.keras")
+    model = load_model("trained_model/100*100_mini_batch/model_2d.keras")
     loss, accuracy = model.evaluate(x3d_test, y_test, verbose=1)
     print('Test loss:', loss)
     print('Test accuracy:', accuracy)

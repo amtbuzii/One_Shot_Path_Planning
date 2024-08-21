@@ -137,7 +137,7 @@ def write_chunk_to_files(chunk_data, chunk_index, grid_size):
     inputs_flat = inputs_array.reshape(-1, flat_size)
     output_flat = output_array.reshape(-1, flat_size)
 
-    output_dir = f"generated_environments_chunk_{30+chunk_index}"
+    output_dir = f"generated_environments_chunk_{60+chunk_index}"
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -192,15 +192,15 @@ def generate_environments(num_envs, grid_size, num_obstacles, obstacle_size, num
 
 
 def main():
-    num_envs = 100  # Total number of environments to generate
+    num_envs = 400000  # Total number of environments to generate
     grid_size = 100
-    num_obstacles = 12
-    obstacle_size = 25
+    num_obstacles = 10
+    obstacle_size = 22
     num_start_goal_pairs = 1
-    min_distance = 20
-    chunk_size = 50  # Number of environments per file
+    min_distance = 50
+    chunk_size = 10000  # Number of environments per file
 
-    set_random_seed(42)  # Set a fixed seed for reproducibility
+    set_random_seed(182)  # Set a fixed seed for reproducibility
     generate_environments(num_envs, grid_size, num_obstacles, obstacle_size, num_start_goal_pairs, min_distance,
                           chunk_size)
 

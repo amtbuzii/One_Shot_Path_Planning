@@ -30,11 +30,7 @@ PATH = 'data_from_inbal/100X100/'
 HIDDEN_LAYERS = 100
 TRAIN_RATIO = 0.7
 N = 100
-directories_path = ['data_from_inbal/100X100_C/100x100_10000',
-                    'data_from_inbal/100X100_C/100x100_20000',
-                    'data_from_inbal/100X100_C/100x100_30000',
-                    'data_from_inbal/100X100_C/100x100_40000',
-                    'data_from_inbal/100X100_C/100x100_50000']
+directories_path = [f'database/generated_environments_chunk_{i}' for i in range(1, 41)]
 
 def load_data_from_directories(directories: List[str]) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """
