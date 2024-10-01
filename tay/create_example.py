@@ -7,8 +7,8 @@ N = 100  # Adjust as needed
 
 
 def load_data():
-    goal_position = np.loadtxt('/home/amitbou/One_Shot_Path_Planning/database/5K/generated_environments_chunk_1/g_maps.dat')
-    obstacle_map = np.loadtxt('/home/amitbou/One_Shot_Path_Planning/database/5K/generated_environments_chunk_1/inputs.dat')
+    goal_position = np.loadtxt('/home/amitbou/One_Shot_Path_Planning/data_from_inbal/100X100/g_maps.dat')
+    obstacle_map = np.loadtxt('/home/amitbou/One_Shot_Path_Planning/data_from_inbal/100X100/inputs.dat')
     return obstacle_map, goal_position
 
 
