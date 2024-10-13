@@ -78,7 +78,7 @@ db_size = x.shape[0]
 inp = np.zeros((db_size, N, N, 2))
 target = np.zeros((db_size, N, N))
 
-for ind in range(50):
+for ind in range(db_size):
     obs, to, dst, vst = create_obs_scenario(ind)
     inp[ind, :, :, 0] = obs
     inp[ind, :, :, 1] = to

@@ -15,13 +15,18 @@ import cv2
 
 
 # %% Load DB. If distances already calculated, just load them.
-N = 30  # map size
+N = 100  # map size
 
-data = np.load('30x30Inbal1DB.npz')
+data = np.load('/home/amitbou/One_Shot_Path_Planning/tay/DB_compressed.npz')
 inp = data['inp']
 target = data['target']
 db_size = inp.shape[0]
 del data
+print("Infs in target:", np.isinf(target).any())
+max_value = np.max(target[np.isfinite(target)])
+target = np.where(np.isinf(target), max_value + 2, target)
+print("Infs in target:", np.isinf(target).any())
+
 
 # %% Build DB - run this only once to calculate distances
 '''
